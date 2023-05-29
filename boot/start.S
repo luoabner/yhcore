@@ -1,4 +1,4 @@
-    .equ STACK_SIZE, 1024
+    .equ STACK_SIZE, 8192
     .equ MAX_CPU_NUMBER, 8
     .global _start
     .text
@@ -9,7 +9,7 @@ _start: # 上电后由bootloader跳转到0x80000000
     # 建立栈
     slli t0, t0, 10
     la sp, stacks + STACK_SIZE # 将栈设置为stacks的地址加上栈的大小
-    add sp, sp, t0 # 将t0左移10位之后的值与sp相加，得到实际上我们希望的栈的位置
+    sub sp, sp, t0 # 将t0左移10位之后的值与sp相减，得到实际上我们希望的栈的位置（第0个hart）
     j kernel_entry
 park:
     wfi # hart进入休眠状态，直到接收到中断信号

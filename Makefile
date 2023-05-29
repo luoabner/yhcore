@@ -1,6 +1,6 @@
 CROSS_COMPILE = riscv64-unknown-elf-
 CFLAGS = -nostdlib -fno-builtin -march=rv32ima -mabi=ilp32 -g -Wall
-
+LIBRARY_PATH = -I include
 QEMU = qemu-system-riscv32
 QFLAGS = -nographic -smp 1 -machine virt -bios none
 
@@ -9,10 +9,16 @@ CC = ${CROSS_COMPILE}gcc
 OBJCOPY = ${CROSS_COMPILE}objcopy
 OBJDUMP = ${CROSS_COMPILE}objdump
 
-ASM_SRC = init.S 
-C_SRC = kernel.c uart.c 
+ASM_SRC = boot/start.S \
+	mm/mem.S 
+C_SRC = kernel/kernel.c \
+	kernel/printf.c \
+	device/uart.c \
+	mm/page.c
 OBJS = $(ASM_SRC:.S=.o)
 OBJS += $(C_SRC:.c=.o)
+# WORKING_DIRECTORY = $(shell pwd)
+# DIRS := . $(shell find $(WORKING_DIRECTORY) -type d)
 
 .DEFAULT_GOAL := all
 all: os.elf
@@ -20,14 +26,14 @@ all: os.elf
 # start.o must be the first in dependency!
 
 os.elf: ${OBJS}
-	${CC} ${CFLAGS} -Ttext=0x80000000 -o os.elf $^
+	${CC} ${CFLAGS} -T build.ld -o os.elf $^
 	${OBJCOPY} -O binary os.elf os.bin
 
 %.o : %.c
-	${CC} ${CFLAGS} -c -o $@ $<
+	${CC} ${CFLAGS} ${LIBRARY_PATH} -c -o $@ $<
 
 %.o : %.S
-	${CC} ${CFLAGS} -c -o $@ $<
+	${CC} ${CFLAGS} ${LIBRARY_PATH} -c -o $@ $<
 
 run: all
 	@${QEMU} -M ? | grep virt >/dev/null || exit
@@ -49,3 +55,4 @@ code: all
 .PHONY : clean
 clean:
 	rm -rf *.o *.bin *.elf
+	rm -f boot/*.o device/*.o init/*.o kernel/*.o mm/*.o

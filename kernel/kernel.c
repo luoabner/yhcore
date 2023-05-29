@@ -1,7 +1,7 @@
-extern void uart_init(void);
-extern void uart_puts(char *s);
-
+#include <sys.h>
 void kernel_entry(){
+    uart_init();
     uart_puts("Hello, world!\n");
+    page_init();
     while(1){;}
 }

@@ -22,7 +22,7 @@
 #define uart_read_reg(reg) (*(uart_reg(reg)))
 #define uart_write_reg(reg, v) (*(uart_reg(reg)) = (v))
 
-void uarg_init(){
+void uart_init(){
     uart_write_reg(IER, 0x0); // 关闭中断
 
     // 设置波特率
