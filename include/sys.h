@@ -8,6 +8,7 @@
 
 /* uart */
 // extern void uart_init();
+extern void uart_init();
 extern int uart_putchar(char ch);
 extern void uart_puts(char *s);
 
@@ -16,7 +17,7 @@ extern int  printf(const char* s, ...);
 extern void panic(char *s);
 
 /* memory management */
-// extern void page_init();
+extern void page_init();
 extern void *page_alloc(int npages);
 extern void page_free(void *p);
 #endif

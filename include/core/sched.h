@@ -20,4 +20,7 @@ typedef struct _hart_reg{
 
 extern void schedule_init(void);
 extern void schedule(void);
+extern int task_create(void(* task_entry)(void));
+extern void task_yield(void);
+extern volatile void task_delay(int count);
 #endif

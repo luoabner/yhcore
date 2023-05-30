@@ -16,7 +16,8 @@ C_SRC = kernel/kernel.c \
 	kernel/printf.c \
 	kernel/sched.c \
 	device/uart.c \
-	mm/page.c 
+	mm/page.c \
+	init/init_entry.c
 OBJS = $(ASM_SRC:.S=.o)
 OBJS += $(C_SRC:.c=.o)
 # WORKING_DIRECTORY = $(shell pwd)
