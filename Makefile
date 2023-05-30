@@ -10,11 +10,13 @@ OBJCOPY = ${CROSS_COMPILE}objcopy
 OBJDUMP = ${CROSS_COMPILE}objdump
 
 ASM_SRC = boot/start.S \
-	mm/mem.S 
+	mm/mem.S \
+	kernel/schedule.S
 C_SRC = kernel/kernel.c \
 	kernel/printf.c \
+	kernel/sched.c \
 	device/uart.c \
-	mm/page.c
+	mm/page.c 
 OBJS = $(ASM_SRC:.S=.o)
 OBJS += $(C_SRC:.c=.o)
 # WORKING_DIRECTORY = $(shell pwd)
