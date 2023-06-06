@@ -15,9 +15,10 @@ ASM_SRC = boot/start.S \
 C_SRC = kernel/kernel.c \
 	kernel/printf.c \
 	kernel/sched.c \
+	kernel/trap.c \
 	device/uart.c \
 	mm/page.c \
-	init/init_entry.c
+	init/init_entry.c 
 OBJS = $(ASM_SRC:.S=.o)
 OBJS += $(C_SRC:.c=.o)
 # WORKING_DIRECTORY = $(shell pwd)
