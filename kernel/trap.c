@@ -1,7 +1,8 @@
 #include <core/sched.h>
 #include <sys.h>
 
-extern void trap_vector(void);
+extern void trap_vector(void);/* see in schedule.S, line 91 */
+
 /* Machine-mode interrupt vector */
 static inline void w_mtvec(reg_t x){
 	asm volatile("csrw mtvec, %0" : : "r" (x));
@@ -12,16 +13,19 @@ static inline void w_mtvec(reg_t x){
 #define MIE_MTIE (1 << 7)  // timer
 #define MIE_MSIE (1 << 3)  // software
 
+/* read the value of mie and return */
 static inline reg_t r_mie(){
 	reg_t x;
 	asm volatile("csrr %0, mie" : "=r" (x) );
 	return x;
 }
 
+/* write value of x into mie register */
 static inline void w_mie(reg_t x){
 	asm volatile("csrw mie, %0" : : "r" (x));
 }
 
+/* read the value of mcause and return */
 static inline reg_t r_mcause(){
 	reg_t x;
 	asm volatile("csrr %0, mcause" : "=r" (x) );
@@ -35,7 +39,7 @@ void trap_init(){
     w_mtvec((reg_t)trap_vector); /* 将trap_vector函数的首地址放入mtvec寄存器 */
 }
 
-void trap_handler(reg_t epc, reg_t cause){
+reg_t trap_handler(reg_t epc, reg_t cause){
     reg_t return_address = epc;
     reg_t trap_cause = cause & 0xfff;
     if (cause & 0x80000000){
@@ -105,5 +109,19 @@ void trap_handler(reg_t epc, reg_t cause){
         default:
             break;
         }
+        panic("Not supported yet!");
     }
+    return return_address;
+}
+
+void system_call(int syscall_number){
+    // asm volatile();
+
+	/*
+	 * Synchronous exception code = 5
+	 * Load access fault
+	 */
+	//int a = *(int *)0x00000000;
+
+	uart_puts("Entering system call, but not implemented...\n");
 }

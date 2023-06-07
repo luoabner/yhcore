@@ -86,4 +86,29 @@ task_switch:
     mv t6, a0
     reg_restore t6
     ret
+
+
+.global trap_vector
+.align 4
+trap_vector:
+    csrrw t6, mscratch, t6 # 交换t6和mscratch
+    reg_save t6 # 以t6为base，保存除t6之外的寄存器
+    mv t5, t6 # 把t6送到t5
+    csrr t6, mscratch # 把t6从mscratch中又读回来
+    sw t6, 120(t5) # 将t6保存到内存中
+    csrw mscratch, t5 # 将t5放回mscratch，就当什么也没发生过:)
+
+    # call trap_handler (see in trap.c)
+    csrr a0, mepc
+    csrr a1, mcause
+    call trap_handler
+
+    # trap_handler return the return address to a0
+    csrw mepc, a0
+    csrr t6, mscratch # read mscratch
+    reg_restore t6
+
+    # using mret to return to where we come from
+    mret
+
 .end

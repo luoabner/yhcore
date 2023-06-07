@@ -1,12 +1,14 @@
 #include <core/sched.h>
 #include <sys.h>
 
+extern void system_call(int syscall_number);
 #define DELAY 100000
 
 void user_task0(void){
     uart_puts("Hello world from task 0!\n");
     while(1){
         uart_puts("Task 0 is running!\n");
+        system_call(0);
         task_delay(DELAY);
         task_yield();
     }
