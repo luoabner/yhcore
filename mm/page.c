@@ -2,16 +2,16 @@
 /*
  * Following global vars are defined in mem.S
  */
-extern uint32_t text_start;
-extern uint32_t text_end;
-extern uint32_t data_start;
-extern uint32_t data_end;
-extern uint32_t rodata_start;
-extern uint32_t rodata_end;
-extern uint32_t bss_start;
-extern uint32_t bss_end;
-extern uint32_t heap_start;
-extern uint32_t heap_size;
+extern uint64_t text_start;
+extern uint64_t text_end;
+extern uint64_t data_start;
+extern uint64_t data_end;
+extern uint64_t rodata_start;
+extern uint64_t rodata_end;
+extern uint64_t bss_start;
+extern uint64_t bss_end;
+extern uint64_t heap_start;
+extern uint64_t heap_size;
 
 /*
  * _alloc_start points to the actual start address of heap pool
@@ -19,9 +19,9 @@ extern uint32_t heap_size;
  * _num_pages holds the actual max number of pages we can allocate.
  */
 
-static uint32_t _alloc_start = 0;
-static uint32_t _alloc_end = 0;
-static uint32_t _num_pages = 0;
+static uint64_t _alloc_start = 0;
+static uint64_t _alloc_end = 0;
+static uint64_t _num_pages = 0;
 
 #define PAGE_SIZE 4096
 #define PAGE_ORDER 12
@@ -68,9 +68,9 @@ static inline int _is_last_page(struct Page *page) {
  * align the address to the border of page(4K)
  */
 
-static inline uint32_t _align_page(uint32_t address)
+static inline uint64_t _align_page(uint64_t address)
 {
-	uint32_t order = (1 << PAGE_ORDER) - 1;
+	uint64_t order = (1 << PAGE_ORDER) - 1;
 	return (address + order) & (~order);
 }
 
@@ -84,11 +84,12 @@ void page_init()
 	printf("HEAP_START = %x, HEAP_SIZE = %x, num of pages = %d\n", heap_start, heap_size, _num_pages);
 	
 	struct Page *page = (struct Page *)heap_start;
+
 	for (int i = 0; i < _num_pages; i++) {
 		_init_clear_page(page);
 		page++;	
 	}
-
+	
 	_alloc_start = _align_page(heap_start + 8 * PAGE_SIZE);
 	_alloc_end = _alloc_start + (PAGE_SIZE * _num_pages);
 
@@ -154,13 +155,13 @@ void page_free(void *p)
 	/*
 	 * Assert (TBD) if p is invalid
 	 */
-	if (!p || (uint32_t)p >= _alloc_end) {
+	if (!p || (uint64_t)p >= _alloc_end) {
 		panic("trying to free an empty page!");
 		return;
 	}
 	/* get the first page descriptor of this memory block */
 	struct Page *page = (struct Page *)heap_start;
-	page += ((uint32_t)p - _alloc_start)/ PAGE_SIZE;
+	page += ((uint64_t)p - _alloc_start)/ PAGE_SIZE;
 	/* loop and clear all the page descriptors of the memory block */
 	while (!_page_is_free(page)) {
 		if (_is_last_page(page)) {

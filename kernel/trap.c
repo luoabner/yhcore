@@ -116,7 +116,6 @@ reg_t trap_handler(reg_t epc, reg_t cause){
 
 void system_call(int syscall_number){
     // asm volatile();
-
 	/*
 	 * Synchronous exception code = 5
 	 * Load access fault

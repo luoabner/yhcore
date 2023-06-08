@@ -1,7 +1,7 @@
 #ifndef __sched__
 #define __sched__
 
-#define reg_t int /* reg_t 是在寄存器中保存的数，在32位的RISC-V平台上，这是一个32位宽的数 */
+typedef unsigned long long reg_t; /* reg_t 是在寄存器中保存的数，在64位的RISC-V平台上，这是一个64位宽的数 */
 typedef struct _hart_reg{
     /* reg zero is ignored, since it remains 0 all the time */
     reg_t ra;

@@ -1,7 +1,7 @@
 CROSS_COMPILE = riscv64-unknown-elf-
-CFLAGS = -nostdlib -fno-builtin -march=rv32ima -mabi=ilp32 -g -Wall
+CFLAGS = -nostdlib -fno-builtin -g -Wall -march=rv64imafd -mabi=lp64d -O2 -mcmodel=medany
 LIBRARY_PATH = -I include
-QEMU = qemu-system-riscv32
+QEMU = qemu-system-riscv64
 QFLAGS = -nographic -smp 1 -machine virt -bios none
 
 GDB = gdb-multiarch

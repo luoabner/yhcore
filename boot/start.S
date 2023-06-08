@@ -1,4 +1,4 @@
-    .equ STACK_SIZE, 8192
+    .equ STACK_SIZE, 1024
     .equ MAX_CPU_NUMBER, 8
     .global _start
     .text
