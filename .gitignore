@@ -1,0 +1,7 @@
+boot/*.o
+device/*.o
+init/*.o
+kernel/*.o
+mm/*.o
+*.bin
+*.elf
